@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="login.css" type="text/css">
+</head>
+<body>
+    <div class="login-box">
+        <h1>Login</h1>
+        <form action="login_process.php" method="POST">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="">
+            <label>Password</label>
+            <input type="password" name="passwd" placeholder="">
+            <input type="submit"value="submit">
+        </form>
+    </div>
+    <p class="p-2">Not have an account? <a href="signup.php">Sign up Here</a></p>
+</body>
+</html>

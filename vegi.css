@@ -1,0 +1,20 @@
+.header
+{
+    font-size: 100px;
+    background-image:url(31.jpg);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-align: center;
+}
+.table
+{
+    margin: 40px;
+}
+td
+{
+    text-align: center;
+    color:#ff8c00;
+}
+*
+{
+    background-color: black;
+}
