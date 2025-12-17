@@ -1,7 +1,7 @@
 <?php
-// login_process.php - Login පරීක්ෂා කිරීමේ සහ සත්‍යාපනයේ කේතය
+// login_process.php - Login checking and verification code
 
-// Database connection settings (ඔබගේ අනෙකුත් ගොනුවල ඇති ආකාරයටම)
+// Database connection settings (same as in your other files)
 $servername = "localhost"; 
 $username = "root"; 
 $password = ""; 
@@ -16,48 +16,48 @@ if ($conn->connect_error) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-    // 1. Form එකෙන් දත්ත ලබා ගැනීම (login.php එකේ name attributes අනුව)
+    // 1.Retrieving data from the form (according to the name attributes in login.php)
     $email = $_POST['email'];
     $passwd = $_POST['passwd'];
     
-    // 2. Prepared Statement භාවිතයෙන් Database එකේ අදාළ Email එක සොයා ගැනීම
-    // මෙහිදී මුරපද Hash එක SELECT කර ගනී.
+    // 2.Finding the relevant email in the database using a prepared statement
+// Here, the password hash is SELECTed.
     $sql = "SELECT password FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     
     // Bind parameters: 1 string (s)
     $stmt->bind_param("s", $email);
     $stmt->execute();
-    $result = $stmt->get_result(); // ප්‍රතිඵල ලබා ගනී
+    $result = $stmt->get_result(); // give result
 
     if ($result->num_rows === 1) {
-        // 3. Email එක හමුවුවහොත්, Hashed Password එක ලබා ගැනීම
+        // 3.If the email is found, get the Hashed Password
         $row = $result->fetch_assoc();
         $hashed_password = $row['password'];
 
-        // 4. මුරපදය පරීක්ෂා කිරීම (Verify the Password)
-        // password_verify() මඟින් පරිශීලකයා ඇතුළු කළ මුරපදය, Database එකේ ඇති Hash එක සමඟ ගැලපේදැයි පරීක්ෂා කරයි.
+        // 4.Verify the Password
+// password_verify() checks whether the password entered by the user matches the hash in the database.
         if (password_verify($passwd, $hashed_password)) {
             
-            // Login සාර්ථකයි!
+            // Login succesfully!
             
-            // ඔබට මෙතැනින් Session එකක් ආරම්භ කර පරිශීලකයා අඳුනා ගත හැක:
+            // You can start a session and identify the user here:
             // session_start();
             // $_SESSION['loggedin'] = true;
             // $_SESSION['email'] = $email;
             
-            echo "✅ සාදරයෙන් පිළිගනිමු! Login සාර්ථකයි. ඔබව ප්‍රධාන පිටුවට යොමු කෙරේ...";
+            echo "✅ Welcome! Login successful. You will be redirected to the main page.";
             
-            // සාර්ථක වීමෙන් පසු ප්‍රධාන පිටුවට යොමු කිරීම
+            // Redirecting to the main page after success
             // header("Location: index.php"); 
             // exit();
         } else {
-            // මුරපදය වැරදියි
-            echo "❌ මුරපදය වැරදියි. නැවත උත්සාහ කරන්න.";
+            // The password is incorrect
+            echo "Incorrect password. Try again.";
         }
     } else {
-        // Email එක Database එකේ නැත
-        echo "❌ මෙම ඊමේල් ලිපිනය ලියාපදිංචි වී නොමැත.";
+        // The email is not in the database.
+        echo "This email address is not registered.";
     }
     
     $stmt->close();
